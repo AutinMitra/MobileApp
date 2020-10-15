@@ -9,12 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-class CreateTransactionPage extends StatefulWidget {
+class AddTransactionPage extends StatefulWidget {
   @override
-  _CreateTransactionPageState createState() => _CreateTransactionPageState();
+  _AddTransactionPageState createState() => _AddTransactionPageState();
 }
 
-class _CreateTransactionPageState extends State<CreateTransactionPage> {
+class _AddTransactionPageState extends State<AddTransactionPage> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
   TextEditingController _vendorController = TextEditingController();
@@ -43,17 +43,20 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
   }
 
   void addTransaction() {
-    final BankingCardModel model = ModalRoute
+    final TransactionArguments args = ModalRoute
         .of(context)
         .settings
         .arguments;
+
+    final model = args.model;
+    final isSend = args.sendingMoney;
 
     if (_formKey.currentState.validate()) {
       var vendorName = _vendorController.text;
       var cost = double.parse(_costController.text);
       var transaction = TransactionModel(
         vendorName: vendorName,
-        amountMoved: cost * -1,
+        amountMoved: cost * (isSend ? -1 : 1),
         cardType: model.cardType,
         date: _selectedDateTime,
       );
@@ -84,6 +87,11 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
 
   Widget form() {
     var dateFormatted = DateFormat.yMd().format(_selectedDateTime);
+    final TransactionArguments args = ModalRoute
+        .of(context)
+        .settings
+        .arguments;
+    final bool isSend = args.sendingMoney;
 
     return GestureDetector(
       onTap: () {
@@ -96,11 +104,11 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
           padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
           clipBehavior: Clip.none,
           children: [
-            Text("Add Transaction",
+            Text(isSend ? "Send Money" : "Receive Money",
               style: pageTitle,),
             SizedBox(height: 24),
             AdvancedFormTextField(
-              labelText: "Vendor Name",
+              labelText: isSend ? "To" : "From",
               enabled: !_selectingDate,
               controller: _vendorController,
               validator: (text) {
@@ -111,13 +119,15 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
             ),
             SizedBox(height: 12),
             AdvancedFormTextField(
-              labelText: "Cost",
+              labelText: "Amount",
               enabled: !_selectingDate,
               controller: _costController,
               keyboardType: TextInputType.number,
               validator: (text) {
                 if (double.tryParse(text) == null || text.isEmpty)
                   return "Please insert a valid number.";
+                if (double.parse(text) < 0)
+                  return "Positive values only, stop trying to break the app :(";
                 return null;
               },
             ),
@@ -145,4 +155,15 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
       ),
     );
   }
+}
+
+class TransactionArguments {
+  TransactionArguments({
+    @required this.sendingMoney,
+    @required this.model,
+  }) : assert(sendingMoney != null),
+       assert(model != null);
+
+  final bool sendingMoney;
+  final BankingCardModel model;
 }

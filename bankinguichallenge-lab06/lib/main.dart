@@ -1,7 +1,8 @@
 import 'package:bankinguichallenge/blocs/bank_info_bloc.dart';
 import 'package:bankinguichallenge/services/banking_file_utils.dart';
 import 'package:bankinguichallenge/theme/theme.dart';
-import 'package:bankinguichallenge/views/create_transaction_page.dart';
+import 'package:bankinguichallenge/views/add_card_page.dart';
+import 'package:bankinguichallenge/views/add_transaction_page.dart';
 import 'package:bankinguichallenge/views/credit_card_info.dart';
 import 'package:bankinguichallenge/views/home_page.dart';
 import 'package:bankinguichallenge/views/welcome_page.dart';
@@ -47,7 +48,8 @@ class BankingApp extends StatelessWidget {
       routes: {
         '/welcome': (context) => WelcomePage(),
         '/card': (context) => CreditCardInfoPage(),
-        '/transaction/create': (context) => CreateTransactionPage()
+        '/card/add': (context) => AddCardPage(),
+        '/transaction/create': (context) => AddTransactionPage()
       },
     );
   }

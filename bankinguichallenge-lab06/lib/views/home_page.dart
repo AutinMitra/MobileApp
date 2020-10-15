@@ -24,6 +24,7 @@ class _HomePageState extends State<HomePage> {
         if (state is BankInfoLoadedState) {
           return SafeArea(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 bankingAppBar(),
                 cardList(state.cards),
@@ -78,9 +79,10 @@ class _HomePageState extends State<HomePage> {
         children: [
           for(var i = 0; i < cards.length; i++)
             Padding(
-              padding: EdgeInsets.only(right: i < cards.length-1 ? 16.0 : 0),
+              padding: EdgeInsets.only(right: 16),
               child: BankingCard(model: cards[i]),
             ),
+          AddBankingCard(),
         ],
       ),
     );
@@ -145,14 +147,14 @@ class _HomePageBackDrop extends StatelessWidget {
             colors: <Color>[Color(0x00FFFFFF), Colors.white],
           ).createShader(Rect.fromLTRB(0, 0, bounds.width, 36));
         },
-        child: ListView(
+        child: transactions.isNotEmpty ? ListView(
           children: [
             SizedBox(height: 12),
             for(var i = 0; i < transactions.length; i++)
               TransactionCard(model: transactions[i]),
             SizedBox(height: 24)
           ],
-        ),
+        ) : Center(child: Text("No Transactions!", style: pageTitle,)),
         blendMode: BlendMode.dstATop,
       ),
     );

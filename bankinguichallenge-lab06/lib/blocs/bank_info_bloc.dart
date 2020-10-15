@@ -55,6 +55,18 @@ class AddTransactionEvent extends BankInfoEvent {
   final TransactionModel transaction;
 }
 
+class AddCardEvent extends BankInfoEvent {
+  AddCardEvent(this.model);
+
+  final BankingCardModel model;
+}
+
+class RemoveCardEvent extends BankInfoEvent {
+  RemoveCardEvent(this.model);
+
+  final BankingCardModel model;
+}
+
 class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
   BankInfoBloc(BankInfoState initialState) : super(initialState);
 
@@ -64,6 +76,10 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
       yield* mapLoadEventToState(event);
     else if (event is AddTransactionEvent)
       yield* mapAddTransactionEventToState(event);
+    else if (event is AddCardEvent)
+      yield* mapAddCardEventState(event);
+    else if (event is RemoveCardEvent)
+      yield* mapRemoveCardEventState(event);
   }
 
   Stream<BankInfoState> mapLoadEventToState(LoadBankInfoEvent event) async* {
@@ -104,5 +120,26 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
       BankingStorageUtils.saveBankingCards(newCards);
       yield BankInfoLoadedState(cards: newCards, transactions: newTransactions);
     }
+  }
+
+  Stream<BankInfoState> mapAddCardEventState(AddCardEvent event) async* {
+    var loadedState = state as BankInfoLoadedState;
+    var cards = loadedState.cards;
+
+    var newCards = cards + [event.model];
+    BankingStorageUtils.saveBankingCards(newCards);
+
+    yield BankInfoLoadedState(cards: newCards, transactions: loadedState.transactions);
+  }
+
+  Stream<BankInfoState> mapRemoveCardEventState(RemoveCardEvent event) async* {
+    var loadedState = state as BankInfoLoadedState;
+    var cards = loadedState.cards;
+
+    List<BankingCardModel> newCards = List.from(cards);
+    newCards.remove(event.model);
+    BankingStorageUtils.saveBankingCards(newCards);
+
+    yield BankInfoLoadedState(cards: newCards, transactions: loadedState.transactions);
   }
 }

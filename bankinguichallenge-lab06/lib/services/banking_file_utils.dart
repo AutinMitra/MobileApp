@@ -87,7 +87,7 @@ class BankingStorageUtils {
   static Future<List<BankingCardModel>> loadBankingCards() async {
     // If there is no file, there is no items
     if (!await FileUtils.fileExists(cardsJSON))
-      await _createSampleData();
+      return [];
 
     // Read the file
     var data = await FileUtils.readFile(cardsJSON);
@@ -106,7 +106,7 @@ class BankingStorageUtils {
   static Future<List<TransactionModel>> loadTransactions() async {
     // If there is no file, there is no items
     if (!await FileUtils.fileExists(transactionsJSON))
-      await _createSampleData();
+      return [];
 
     // Read the file
     var data = await FileUtils.readFile(transactionsJSON);

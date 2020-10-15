@@ -1,6 +1,7 @@
 import 'package:bankinguichallenge/models/bankingcard_model.dart';
 import 'package:bankinguichallenge/theme/fontstyles.dart';
 import 'package:bankinguichallenge/theme/palette.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:styled_widget/styled_widget.dart';
 
@@ -86,6 +87,116 @@ class _BankingCardState extends State<BankingCard> {
         SizedBox(height: 8),
         Text(widget.model.cardType, style: cardBottomTextSecondary),
       ],
+    );
+  }
+}
+
+class AddBankingCard extends StatefulWidget {
+  @override
+  _AddBankingCard createState() => _AddBankingCard();
+
+
+}
+
+class _AddBankingCard extends State<AddBankingCard> {
+  bool pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final cardItem = ({Widget child}) => Styled.widget(child: child)
+        .borderRadius(all: 24.0)
+        .backgroundColor(Colors.transparent, animate: true)
+        .clipRRect(all: 24)
+        .gestures(
+          onTapChange: (tapStatus) => setState(() => pressed = tapStatus),
+          onTap: () {
+            Navigator.pushNamed(context, "/card/add");
+          },
+        )
+        .scale(all: pressed ? 0.95 : 1.0, animate: true)
+        .animate(Duration(milliseconds: 150), Curves.easeOut);
+
+    return cardItem(
+      child: DottedBorder(
+        borderType: BorderType.RRect,
+        radius: Radius.circular(24),
+        strokeWidth: 4,
+        dashPattern: [8, 4],
+        color: Palette.textSecondary,
+        child: Container(
+          width: 132,
+          height: 206,
+          child: Center(
+            child: Icon(
+              Icons.add,
+              color: Palette.textSecondary,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CreditInfoCard extends StatelessWidget {
+  CreditInfoCard(this.model);
+  final BankingCardModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    var bg = Colors.white;
+    var text = Colors.black;
+    var cardText = text.withOpacity(0.8);
+
+    return Material(
+      clipBehavior: Clip.hardEdge,
+      borderRadius: BorderRadius.circular(24),
+      elevation: 12,
+      shadowColor: Color(0x30000000),
+      child: Container(
+        padding: EdgeInsets.all(24),
+        height: 212,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: bg,
+          image: new DecorationImage(
+            image: new AssetImage("assets/graphics/cardbg.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: DefaultTextStyle(
+            style: TextStyle(color: text),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(model.issuerName, style: transactionBold.copyWith(color: cardText.withOpacity(0.4)),),
+                    logo(),
+                  ],
+                ),
+                Text(model.cardNumber, style: monoCreditCardBalanceNumber,),
+                Text(model.balanceFormatted, style: monoCreditCardBalanceText),
+              ],
+            )
+        ),
+      ),
+    );
+  }
+
+  Widget logo() {
+    return Container(
+      width: 32,
+      height: 32,
+      decoration: BoxDecoration(
+          image: new DecorationImage(
+            image: new AssetImage(model.imagePath),
+            fit: BoxFit.cover,
+          ),
+          borderRadius: BorderRadius.circular(12)
+      ),
     );
   }
 }
