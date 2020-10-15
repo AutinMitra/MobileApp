@@ -1,4 +1,4 @@
-# bankinguichalleng
+# bankinguichallenge
 A Flutter implementation of https://dribbble.com/shots/14364583-Online-Banking-Mobile-App, and 6th lab.
 
 ## Smh no docs
