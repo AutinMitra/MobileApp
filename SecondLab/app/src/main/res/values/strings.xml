@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">SecondLab</string>
+    <string name="enter_name_field">Enter your name</string>
+    <string name="my_name_button">That\'s My Name!</string>
+    <string name="quote_button">Gimme a quote</string>
+    <string name="quote_of_the_day">Quote of The Day</string>
+    <string name="hello_title">Hello</string>
+    <string name="theme_button">Toggle Theme</string>
+    <string-array name="inspir_quote">
+        <item>I know all those words, but that sentence makes no sense to me.</item>
+        <item>Not funny, didn\'t laugh.</item>
+        <item>It\'s not a bug, it\'s a feature.</item>
+        <item>Adding and removing &amp; and * until rustc is happy </item>
+        <item>There are 10 types of people in this world, those who understand binary, and those who don\'t.</item>
+    </string-array>
+</resources>
